@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Pipster.Domain\Pipster.Domain.csproj" />
+    <ProjectReference Include="..\Pipster.Infrastructure\Pipster.Infrastructure.csproj" />
+    <ProjectReference Include="..\Pipster.Shared\Pipster.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

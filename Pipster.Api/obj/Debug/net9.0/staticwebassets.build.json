@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "jpEuLTU0vU0f94mgwGpV7aHcPVjEgrOkLukaSBahncQ=",
+  "Source": "Pipster.Api",
+  "BasePath": "_content/Pipster.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

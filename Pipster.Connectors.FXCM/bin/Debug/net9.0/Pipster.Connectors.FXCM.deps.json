@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "Pipster.Connectors.FXCM/1.0.0": {
+        "dependencies": {
+          "Pipster.Shared": "1.0.0"
+        },
+        "runtime": {
+          "Pipster.Connectors.FXCM.dll": {}
+        }
+      },
+      "Pipster.Shared/1.0.0": {
+        "runtime": {
+          "Pipster.Shared.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Pipster.Connectors.FXCM/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Pipster.Shared/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
