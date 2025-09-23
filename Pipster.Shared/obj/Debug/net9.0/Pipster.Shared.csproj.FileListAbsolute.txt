@@ -9,3 +9,15 @@ C:\Users\Admin\source\repos\Pipster\Pipster.Shared\obj\Debug\net9.0\Pipster.Shar
 C:\Users\Admin\source\repos\Pipster\Pipster.Shared\obj\Debug\net9.0\refint\Pipster.Shared.dll
 C:\Users\Admin\source\repos\Pipster\Pipster.Shared\obj\Debug\net9.0\Pipster.Shared.pdb
 C:\Users\Admin\source\repos\Pipster\Pipster.Shared\obj\Debug\net9.0\ref\Pipster.Shared.dll
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Shared\bin\Debug\net9.0\Pipster.Shared.deps.json
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Shared\bin\Debug\net9.0\Pipster.Shared.dll
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Shared\bin\Debug\net9.0\Pipster.Shared.pdb
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Shared\obj\Debug\net9.0\Pipster.Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Shared\obj\Debug\net9.0\Pipster.Shared.AssemblyInfoInputs.cache
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Shared\obj\Debug\net9.0\Pipster.Shared.AssemblyInfo.cs
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Shared\obj\Debug\net9.0\Pipster.Shared.csproj.CoreCompileInputs.cache
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Shared\obj\Debug\net9.0\Pipster.Shared.sourcelink.json
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Shared\obj\Debug\net9.0\Pipster.Shared.dll
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Shared\obj\Debug\net9.0\refint\Pipster.Shared.dll
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Shared\obj\Debug\net9.0\Pipster.Shared.pdb
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Shared\obj\Debug\net9.0\ref\Pipster.Shared.dll
