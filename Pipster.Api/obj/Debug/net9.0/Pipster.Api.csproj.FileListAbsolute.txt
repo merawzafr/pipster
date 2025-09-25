@@ -70,12 +70,6 @@ C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Api\obj\Debug\net9.0\scope
 C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Api\obj\Debug\net9.0\staticwebassets.build.json
 C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Api\obj\Debug\net9.0\staticwebassets.development.json
 C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Api\obj\Debug\net9.0\staticwebassets.build.endpoints.json
-C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Api\obj\Debug\net9.0\staticwebassets\msbuild.Pipster.Api.Microsoft.AspNetCore.StaticWebAssets.props
-C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Api\obj\Debug\net9.0\staticwebassets\msbuild.Pipster.Api.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
-C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Api\obj\Debug\net9.0\staticwebassets\msbuild.build.Pipster.Api.props
-C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Api\obj\Debug\net9.0\staticwebassets\msbuild.buildMultiTargeting.Pipster.Api.props
-C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Api\obj\Debug\net9.0\staticwebassets\msbuild.buildTransitive.Pipster.Api.props
-C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Api\obj\Debug\net9.0\staticwebassets.pack.json
 C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Api\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Api\obj\Debug\net9.0\Pipster..591F1F03.Up2Date
 C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Api\obj\Debug\net9.0\Pipster.Api.dll
@@ -88,3 +82,8 @@ C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Api\bin\Debug\net9.0\Swash
 C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Api\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Api\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Api\obj\Debug\net9.0\Pipster.Api.xml
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Api\obj\Debug\net9.0\rpswa.dswa.cache.json
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Api\obj\Debug\net9.0\rjimswa.dswa.cache.json
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Api\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Api\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Api\obj\Debug\net9.0\staticwebassets.build.json.cache

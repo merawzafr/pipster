@@ -1,6 +1,8 @@
 ﻿using Pipster.Shared.Contracts;
 
+namespace Pipster.Application.Parsing;
+
 public interface ISignalParser
 {
-    NormalizedSignal? TryParse(string tenantId, string source, string messageText);
+    NormalizedSignal? TryParse(string regex, string signal);
 }

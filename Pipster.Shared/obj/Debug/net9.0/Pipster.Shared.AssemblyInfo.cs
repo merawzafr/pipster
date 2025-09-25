@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Pipster.Shared")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ab81567d1de3e4bf0a8e05ad16d7aa27d1a77d01")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+13967e4f7ec3ddca85725d7e04f8eb79a20a4e5f")]
 [assembly: System.Reflection.AssemblyProductAttribute("Pipster.Shared")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Pipster.Shared")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

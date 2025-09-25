@@ -1,3 +1,4 @@
+using Pipster.Application.Parsing;
 using Pipster.Infrastructure.Messaging;
 using Pipster.Shared.Contracts;
 
@@ -26,13 +27,13 @@ public sealed class TelegramListener : BackgroundService
     {
         // TODO: init Telegram.Bot with your token; subscribe to updates for chosen chats
         // For skeleton, feed a sample message:
-        var sample = "Sell #XAUUSD 3689-3693 SL 3700 TP 3687 3685 3680";
-        var parsed = _parser.TryParse("tenant-self", "my_channel", sample);
-        if (parsed != null)
-        {
-            await _bus.PublishSignalAsync(parsed, ct);
-            _log.LogInformation("Published signal {Hash}", parsed.Hash);
-        }
+        //var sample = "Sell #XAUUSD 3689-3693 SL 3700 TP 3687 3685 3680";
+        //var parsed = _parser.TryParse("tenant-self", "my_channel", sample);
+        //if (parsed != null)
+        //{
+        //    await _bus.PublishSignalAsync(parsed, ct);
+        //    _log.LogInformation("Published signal {Hash}", parsed.Hash);
+        //}
 
         await Task.Delay(Timeout.Infinite, ct);
     }
