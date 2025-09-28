@@ -54,3 +54,12 @@ C:\Users\Admin\source\repos\Pipster\Pipster.Workers.Telegram\obj\Debug\net9.0\re
 C:\Users\Admin\source\repos\Pipster\Pipster.Workers.Telegram\obj\Debug\net9.0\Pipster.Workers.Telegram.pdb
 C:\Users\Admin\source\repos\Pipster\Pipster.Workers.Telegram\obj\Debug\net9.0\Pipster.Workers.Telegram.genruntimeconfig.cache
 C:\Users\Admin\source\repos\Pipster\Pipster.Workers.Telegram\obj\Debug\net9.0\ref\Pipster.Workers.Telegram.dll
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Workers.Telegram\obj\Debug\net9.0\Pipster.Workers.Telegram.csproj.AssemblyReference.cache
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Workers.Telegram\obj\Debug\net9.0\Pipster.Workers.Telegram.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Workers.Telegram\obj\Debug\net9.0\Pipster.Workers.Telegram.AssemblyInfoInputs.cache
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Workers.Telegram\obj\Debug\net9.0\Pipster.Workers.Telegram.AssemblyInfo.cs
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Workers.Telegram\obj\Debug\net9.0\Pipster.Workers.Telegram.csproj.CoreCompileInputs.cache
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Workers.Telegram\obj\Debug\net9.0\Pipster.Workers.Telegram.sourcelink.json
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Workers.Telegram\obj\Debug\net9.0\Pipster.Workers.Telegram.dll
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Workers.Telegram\obj\Debug\net9.0\refint\Pipster.Workers.Telegram.dll
+C:\Users\Admin\source\repos\merawzafr\pipster\Pipster.Workers.Telegram\obj\Debug\net9.0\Pipster.Workers.Telegram.pdb

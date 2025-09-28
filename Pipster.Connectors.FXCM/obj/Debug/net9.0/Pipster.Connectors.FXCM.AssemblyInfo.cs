@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Pipster.Connectors.FXCM")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+74aeb81bb9de6222a3e05f559cf3ce65212ac4ec")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+13967e4f7ec3ddca85725d7e04f8eb79a20a4e5f")]
 [assembly: System.Reflection.AssemblyProductAttribute("Pipster.Connectors.FXCM")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Pipster.Connectors.FXCM")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
