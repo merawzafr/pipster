@@ -8,7 +8,7 @@ Show full files or precise diffs. Include DI registrations and package refs.
 
 ## Add tests
 @tests Read #/docs/product-brief.md and the target file. 
-Create xUnit tests covering success, edge, malformed inputs. Deterministic, no external calls. 
+Create nUnit tests covering success, edge, malformed inputs. Deterministic, no external calls. 
 Generate files under /tests/{Project}.Tests.
 
 ## Wire DI
