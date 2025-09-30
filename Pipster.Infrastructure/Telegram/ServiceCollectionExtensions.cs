@@ -33,6 +33,9 @@ public static class TelegramServiceCollectionExtensions
             services.AddSingleton<ITelegramSessionStore, LocalFileSessionStore>();
         }
 
+        // Core services
+        services.AddSingleton<ITelegramClientManager, TelegramClientManager>();
+
         return services;
     }
 }
