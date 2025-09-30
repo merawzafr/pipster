@@ -1,5 +1,4 @@
 ﻿using Pipster.Shared.Contracts;
-
 namespace Pipster.Application.Parsing;
 
 public interface ISignalParser
