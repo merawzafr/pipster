@@ -1,5 +1,6 @@
 using Pipster.Application.Handlers;
 using Pipster.Application.Parsing;
+using Pipster.Infrastructure.Idempotency;
 using Pipster.Infrastructure.Messaging;
 using Pipster.Infrastructure.Telegram;
 using Pipster.Workers.Telegram;
@@ -11,6 +12,9 @@ builder.Services.AddTelegramServices(builder.Configuration);
 
 // Add message bus (using existing InMemoryBus)
 builder.Services.AddSingleton<IMessageBus, InMemoryBus>();
+
+// Add idempotency store
+builder.Services.AddIdempotencyStore(builder.Configuration);
 
 // Add signal parser
 builder.Services.AddSingleton<ISignalParser, RegexSignalParser>();

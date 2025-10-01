@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Pipster.Application.Parsing;
+using Pipster.Infrastructure.Idempotency;
 using Pipster.Infrastructure.Messaging;
 using Pipster.Shared.Contracts;
 
@@ -14,17 +15,23 @@ public class TelegramMessageHandlerWorker : BackgroundService
     private readonly IMessageBus _bus;
     private readonly ISignalParser _parser;
     private readonly ITenantConfigProvider _configProvider;
+    private readonly IIdempotencyStore _idempotencyStore;
     private readonly ILogger<TelegramMessageHandlerWorker> _logger;
+
+    // 24 hour TTL for idempotency keys
+    private static readonly TimeSpan IdempotencyTtl = TimeSpan.FromHours(24);
 
     public TelegramMessageHandlerWorker(
         IMessageBus bus,
         ISignalParser parser,
         ITenantConfigProvider configProvider,
+        IIdempotencyStore idempotencyStore,
         ILogger<TelegramMessageHandlerWorker> logger)
     {
         _bus = bus;
         _parser = parser;
         _configProvider = configProvider;
+        _idempotencyStore = idempotencyStore;
         _logger = logger;
     }
 

@@ -21,8 +21,4 @@
     <ProjectReference Include="..\Pipster.Shared\Pipster.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Idempotency\" />
-  </ItemGroup>
-
 </Project>
