@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Pipster.Infrastructure.Messaging;
 using Pipster.Shared.Contracts.Telegram;
 using Polly;
 using Polly.CircuitBreaker;
@@ -17,6 +18,7 @@ public class ResilientTelegramClient : ITelegramClient
     private readonly string _sessionPath;
     private readonly TelegramClientOptions _options;
     private readonly ILogger<ResilientTelegramClient> _logger;
+    private readonly IMessageBus _messageBus;
     private readonly HashSet<long> _observedChannels = new();
     private readonly SemaphoreSlim _channelLock = new(1, 1);
     private readonly AsyncCircuitBreakerPolicy _circuitBreaker;
@@ -33,13 +35,15 @@ public class ResilientTelegramClient : ITelegramClient
         TelegramCredentials credentials,
         string sessionPath,
         TelegramClientOptions options,
-        ILogger<ResilientTelegramClient> logger)
+        ILogger<ResilientTelegramClient> logger,
+        IMessageBus messageBus)
     {
         TenantId = tenantId;
         _credentials = credentials;
         _sessionPath = sessionPath;
         _options = options;
         _logger = logger;
+        _messageBus = messageBus;
 
         // Circuit breaker: open after 5 failures in 30s, stay open for 60s
         _circuitBreaker = Policy
@@ -241,9 +245,36 @@ public class ResilientTelegramClient : ITelegramClient
         if (string.IsNullOrWhiteSpace(content))
             return;
 
-        // TODO: Publish to message bus (will implement in next step)
-        _logger.LogDebug("Received message in channel {ChannelId} for tenant {TenantId}: {Content}",
-            chatId, TenantId, content);
+        // Publish to message bus
+        try
+        {
+            var message = new TelegramMessageReceived
+            {
+                TenantId = TenantId,
+                ChannelId = chatId,
+                MessageId = update.Message.Id,
+                Content = content,
+                Timestamp = DateTimeOffset.FromUnixTimeSeconds(update.Message.Date),
+                SenderId = update.Message.SenderId switch
+                {
+                    TdApi.MessageSender.MessageSenderUser user => user.UserId,
+                    TdApi.MessageSender.MessageSenderChat chat => chat.ChatId,
+                    _ => 0
+                }
+            };
+
+            await _messageBus.PublishTelegramMessageAsync(message, CancellationToken.None);
+
+            _logger.LogInformation(
+                "Published message {MessageId} from channel {ChannelId} for tenant {TenantId}",
+                update.Message.Id, chatId, TenantId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex,
+                "Failed to publish message {MessageId} from channel {ChannelId} for tenant {TenantId}",
+                update.Message.Id, chatId, TenantId);
+        }
     }
 
     private Task HandleAuthorizationStateAsync(TdApi.AuthorizationState state)

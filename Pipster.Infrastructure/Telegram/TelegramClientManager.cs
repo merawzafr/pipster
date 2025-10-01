@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using Microsoft.Extensions.Logging;
+using Pipster.Infrastructure.Messaging;
 using Pipster.Shared.Contracts.Telegram;
 
 namespace Pipster.Infrastructure.Telegram;
@@ -12,6 +13,7 @@ public class TelegramClientManager : ITelegramClientManager, IAsyncDisposable
 {
     private readonly ConcurrentDictionary<string, TelegramClientWrapper> _clients = new();
     private readonly ITelegramSessionStore _sessionStore;
+    private readonly IMessageBus _messageBus;
     private readonly ILogger<TelegramClientManager> _logger;
     private readonly ILoggerFactory _loggerFactory;
     private readonly TelegramClientOptions _options;
@@ -19,11 +21,13 @@ public class TelegramClientManager : ITelegramClientManager, IAsyncDisposable
 
     public TelegramClientManager(
         ITelegramSessionStore sessionStore,
+        IMessageBus messageBus,
         ILogger<TelegramClientManager> logger,
         ILoggerFactory loggerFactory,
         TelegramClientOptions options)
     {
         _sessionStore = sessionStore;
+        _messageBus = messageBus;
         _logger = logger;
         _loggerFactory = loggerFactory;
         _options = options;
@@ -112,7 +116,8 @@ public class TelegramClientManager : ITelegramClientManager, IAsyncDisposable
             credentials,
             sessionPath,
             _options,
-            clientLogger);
+            clientLogger,
+            _messageBus); // Pass message bus to client
 
         await client.ConnectAsync(ct);
         return client;
