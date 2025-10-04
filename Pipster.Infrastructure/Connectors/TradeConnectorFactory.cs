@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using System.Text.Json;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Pipster.Domain.Enums;
 using Pipster.Domain.Repositories;
@@ -9,25 +8,40 @@ using Pipster.Shared.Contracts;
 namespace Pipster.Infrastructure.Connectors;
 
 /// <summary>
-/// Factory implementation for creating and caching trade connectors
+/// Factory implementation for creating and caching trade connectors.
+/// Uses registered connector providers (dependency injection) to create instances.
 /// </summary>
 public sealed class TradeConnectorFactory : ITradeConnectorFactory
 {
     private readonly IBrokerConnectionRepository _brokerRepo;
-    private readonly IServiceProvider _serviceProvider;
+    private readonly IEnumerable<ITradeConnectorProvider> _connectorProviders;
     private readonly ILogger<TradeConnectorFactory> _logger;
 
     // Cache connectors by broker connection ID
     private readonly ConcurrentDictionary<string, ITradeConnector> _connectorCache = new();
 
+    // Map broker type names to providers
+    private readonly Dictionary<string, ITradeConnectorProvider> _providersByType;
+
     public TradeConnectorFactory(
         IBrokerConnectionRepository brokerRepo,
-        IServiceProvider serviceProvider,
+        IEnumerable<ITradeConnectorProvider> connectorProviders,
         ILogger<TradeConnectorFactory> logger)
     {
         _brokerRepo = brokerRepo;
-        _serviceProvider = serviceProvider;
+        _connectorProviders = connectorProviders;
         _logger = logger;
+
+        // Build provider lookup map
+        _providersByType = _connectorProviders.ToDictionary(
+            p => p.BrokerType,
+            p => p,
+            StringComparer.OrdinalIgnoreCase);
+
+        _logger.LogInformation(
+            "Initialized connector factory with {Count} registered providers: {Providers}",
+            _providersByType.Count,
+            string.Join(", ", _providersByType.Keys));
     }
 
     public async Task<ITradeConnector> GetConnectorAsync(
@@ -57,13 +71,23 @@ public sealed class TradeConnectorFactory : ITradeConnectorFactory
                 $"Broker connection '{brokerConnectionId}' is not active");
         }
 
+        var brokerTypeName = connection.BrokerType.ToString();
+
         _logger.LogInformation(
             "Creating new connector for broker connection {BrokerConnectionId}, type: {BrokerType}",
             brokerConnectionId,
-            connection.BrokerType);
+            brokerTypeName);
 
-        // Create connector based on broker type
-        var connector = CreateConnector(connection.BrokerType);
+        // Get provider for this broker type
+        if (!_providersByType.TryGetValue(brokerTypeName, out var provider))
+        {
+            throw new NotSupportedException(
+                $"No connector provider registered for broker type '{brokerTypeName}'. " +
+                $"Available providers: {string.Join(", ", _providersByType.Keys)}");
+        }
+
+        // Create connector instance
+        var connector = provider.CreateConnector();
 
         // Decrypt credentials
         var credentials = DecryptCredentials(connection.EncryptedCredentials);
@@ -79,7 +103,7 @@ public sealed class TradeConnectorFactory : ITradeConnectorFactory
                 "Connector validation failed for broker connection {BrokerConnectionId}",
                 brokerConnectionId);
             throw new InvalidOperationException(
-                $"Failed to validate connection to {connection.BrokerType} for broker connection '{brokerConnectionId}'");
+                $"Failed to validate connection to {brokerTypeName} for broker connection '{brokerConnectionId}'");
         }
 
         // Update last used timestamp
@@ -137,18 +161,6 @@ public sealed class TradeConnectorFactory : ITradeConnectorFactory
         var count = _connectorCache.Count;
         _connectorCache.Clear();
         _logger.LogInformation("Cleared all cached connectors ({Count})", count);
-    }
-
-    private ITradeConnector CreateConnector(BrokerType brokerType)
-    {
-        return brokerType switch
-        {
-            BrokerType.IGMarkets => _serviceProvider.GetRequiredService<Pipster.Connectors.IGMarkets.IGMarketsConnector>(),
-            // Future broker types:
-            // BrokerType.OANDA => _serviceProvider.GetRequiredService<OandaConnector>(),
-            // BrokerType.IBKR => _serviceProvider.GetRequiredService<IBKRConnector>(),
-            _ => throw new NotSupportedException($"Broker type {brokerType} is not supported")
-        };
     }
 
     private IReadOnlyDictionary<string, string> DecryptCredentials(string encryptedCredentials)

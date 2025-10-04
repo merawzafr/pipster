@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Pipster.Connectors.IGMarkets.Configuration;
 using Pipster.Connectors.IGMarkets.Services;
+using Pipster.Shared.Contracts;
 using Polly;
 using Polly.Extensions.Http;
 
@@ -26,6 +27,9 @@ public static class IGMarketsServiceCollectionExtensions
 
         // Validate configuration on startup
         services.AddSingleton<IValidateOptions<IGMarketsOptions>, IGMarketsOptionsValidator>();
+
+        // Register as transient so factory can create new instances
+        services.AddSingleton<ITradeConnectorProvider, IGMarketsConnectorProvider>();
 
         // Register session manager with its own HttpClient
         services.AddHttpClient<IIGSessionManager, IGSessionManager>()

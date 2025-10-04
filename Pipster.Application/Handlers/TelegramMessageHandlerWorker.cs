@@ -149,20 +149,58 @@ public sealed class TelegramMessageHandlerWorker : BackgroundService
             return;
         }
 
-        // Step 7: Convert to trade command
-        var tradeCommand = ConvertToTradeCommand(normalizedSignal, tradingConfig);
+        // Step 7: Get broker connections for this channel
+        List<string> brokerConnectionIds;
 
-        // Step 8: Publish for execution
-        await _messageBus.PublishTradeAsync(tradeCommand, ct);
+        if (channelConfig.BrokerConnectionIds.Any())
+        {
+            // Use channel-specific brokers
+            brokerConnectionIds = channelConfig.BrokerConnectionIds.ToList();
+            _logger.LogInformation(
+                "Using {Count} channel-specific broker(s) for tenant {TenantId}, channel {ChannelId}",
+                brokerConnectionIds.Count, message.TenantId, message.ChannelId);
+        }
+        else
+        {
+            // Use tenant's default active brokers
+            // TODO: This will be implemented when we add the broker service
+            // For now, we'll skip if no brokers configured on channel
+            _logger.LogWarning(
+                "No brokers configured for tenant {TenantId}, channel {ChannelId}. Signal will not be executed.",
+                message.TenantId, message.ChannelId);
+            return;
+        }
 
-        _logger.LogInformation(
-            "Published trade command for {Symbol} {Side}, tenant {TenantId}",
-            tradeCommand.Symbol, tradeCommand.Side, tradeCommand.TenantId);
+        if (!brokerConnectionIds.Any())
+        {
+            _logger.LogWarning(
+                "No active broker connections for tenant {TenantId}, channel {ChannelId}",
+                message.TenantId, message.ChannelId);
+            return;
+        }
+
+        // Step 8: Create trade command for EACH broker
+        foreach (var brokerConnectionId in brokerConnectionIds)
+        {
+            var tradeCommand = ConvertToTradeCommand(
+                normalizedSignal,
+                tradingConfig,
+                brokerConnectionId,
+                message.ChannelId.ToString());
+
+            await _messageBus.PublishTradeAsync(tradeCommand, ct);
+
+            _logger.LogInformation(
+                "Published trade command to broker {BrokerConnectionId} for {Symbol} {Side}, tenant {TenantId}",
+                brokerConnectionId, tradeCommand.Symbol, tradeCommand.Side, message.TenantId);
+        }
     }
 
     private static TradeCommand ConvertToTradeCommand(
-        NormalizedSignal signal,
-        Domain.Entities.TradingConfiguration tradingConfig)
+    NormalizedSignal signal,
+    Domain.Entities.TradingConfiguration tradingConfig,
+    string brokerConnectionId,
+    string sourceChannelId)
     {
         // Determine position size based on configuration
         int units = tradingConfig.SizingMode switch
@@ -186,6 +224,8 @@ public sealed class TelegramMessageHandlerWorker : BackgroundService
             StopLoss: signal.StopLoss,
             TakeProfit: takeProfit,
             CorrelationId: signal.Hash,
-            CreatedAt: DateTimeOffset.UtcNow);
+            CreatedAt: DateTimeOffset.UtcNow,
+            BrokerConnectionId: brokerConnectionId,
+            SourceChannelId: sourceChannelId);
     }
 }
