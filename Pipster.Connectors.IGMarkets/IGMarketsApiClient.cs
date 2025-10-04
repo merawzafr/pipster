@@ -4,7 +4,6 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pipster.Connectors.IGMarkets.Configuration;
-using Pipster.Connectors.IGMarkets.Models.Authentication;
 using Pipster.Connectors.IGMarkets.Models.Common;
 using Pipster.Connectors.IGMarkets.Models.Positions;
 using Pipster.Connectors.IGMarkets.Services;
