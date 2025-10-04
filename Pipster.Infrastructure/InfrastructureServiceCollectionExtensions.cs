@@ -24,6 +24,7 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddSingleton<ITenantRepository, InMemoryTenantRepository>();
         services.AddSingleton<IChannelConfigurationRepository, InMemoryChannelConfigurationRepository>();
         services.AddSingleton<ITradingConfigurationRepository, InMemoryTradingConfigurationRepository>();
+        services.AddSingleton<IBrokerConnectionRepository, InMemoryBrokerConnectionRepository>();
         services.AddSingleton<IMessageBus, InMemoryBus>();
 
         /// Dependency injection extensions for idempotency services.
