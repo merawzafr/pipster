@@ -14,6 +14,12 @@ public sealed class IGMarketsConnector : ITradeConnector
     private readonly IIGMarketsApiClient _apiClient;
     private readonly ILogger<IGMarketsConnector> _logger;
 
+    private string? _tenantId;
+    private bool _isInitialized;
+
+    public string BrokerType => "IGMarkets";
+    public bool IsInitialized => _isInitialized;
+
     public IGMarketsConnector(
         IIGMarketsApiClient apiClient,
         ILogger<IGMarketsConnector> logger)
@@ -22,10 +28,62 @@ public sealed class IGMarketsConnector : ITradeConnector
         _logger = logger;
     }
 
+    public Task InitializeAsync(
+        string tenantId,
+        IReadOnlyDictionary<string, string> credentials,
+        CancellationToken ct = default)
+    {
+        if (string.IsNullOrWhiteSpace(tenantId))
+            throw new ArgumentException("Tenant ID cannot be empty", nameof(tenantId));
+
+        // Validate required credentials
+        if (!credentials.ContainsKey("ApiKey") ||
+            !credentials.ContainsKey("Username") ||
+            !credentials.ContainsKey("Password"))
+        {
+            throw new ArgumentException(
+                "IG Markets requires ApiKey, Username, and Password credentials");
+        }
+
+        _tenantId = tenantId;
+        _isInitialized = true;
+
+        _logger.LogInformation(
+            "Initialized IG Markets connector for tenant {TenantId}",
+            tenantId);
+
+        return Task.CompletedTask;
+    }
+
+    public async Task<bool> ValidateConnectionAsync(CancellationToken ct = default)
+    {
+        if (!_isInitialized)
+            return false;
+
+        try
+        {
+            // Try to get market details for a common instrument
+            await _apiClient.GetMarketDetailsAsync("CS.D.EURUSD.CFD.IP", ct);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "IG Markets connection validation failed for tenant {TenantId}", _tenantId);
+            return false;
+        }
+    }
+
     public async Task<string> PlaceOrderAsync(TradeCommand cmd, CancellationToken ct)
     {
+        if (!_isInitialized)
+        {
+            throw new InvalidOperationException(
+                "Connector not initialized. Call InitializeAsync first.");
+        }
+
         _logger.LogInformation(
-            "Placing IG order: {Symbol} {Side} {Units} units @ {Price}, SL: {StopLoss}, TP: {TakeProfit}",
+            "Placing IG order for tenant {TenantId}: {Symbol} {Side} {Units} units @ {Price}, SL: {StopLoss}, TP: {TakeProfit}",
+            _tenantId,
             cmd.Symbol,
             cmd.Side,
             cmd.Units,
@@ -61,8 +119,8 @@ public sealed class IGMarketsConnector : ITradeConnector
                 Level = cmd.Price,
                 StopLevel = cmd.StopLoss,
                 LimitLevel = cmd.TakeProfit,
-                GuaranteedStop = false, // Regular stop loss
-                ForceOpen = true,       // Always open new position
+                GuaranteedStop = false,
+                ForceOpen = true,
                 CurrencyCode = "USD"
             };
 
@@ -70,7 +128,8 @@ public sealed class IGMarketsConnector : ITradeConnector
             var dealRef = await _apiClient.CreatePositionAsync(request, ct);
 
             _logger.LogInformation(
-                "IG position created successfully. Deal reference: {DealReference}",
+                "IG position created successfully for tenant {TenantId}. Deal reference: {DealReference}",
+                _tenantId,
                 dealRef.DealReference);
 
             // 4. Wait for deal confirmation (with timeout)
@@ -84,8 +143,9 @@ public sealed class IGMarketsConnector : ITradeConnector
                 var orderId = confirmation.DealId ?? dealRef.DealReference;
 
                 _logger.LogInformation(
-                    "IG order {OrderId} accepted for {Symbol}. Executed @ {Level}",
+                    "IG order {OrderId} accepted for tenant {TenantId}, {Symbol}. Executed @ {Level}",
                     orderId,
+                    _tenantId,
                     cmd.Symbol,
                     confirmation.Level);
 
@@ -96,7 +156,8 @@ public sealed class IGMarketsConnector : ITradeConnector
                 var reason = confirmation.Reason ?? "Unknown reason";
 
                 _logger.LogError(
-                    "IG order rejected for {Symbol}. Status: {Status}, Reason: {Reason}",
+                    "IG order rejected for tenant {TenantId}, {Symbol}. Status: {Status}, Reason: {Reason}",
+                    _tenantId,
                     cmd.Symbol,
                     confirmation.DealStatus,
                     reason);
@@ -107,7 +168,7 @@ public sealed class IGMarketsConnector : ITradeConnector
         }
         catch (Exception ex) when (ex is not InvalidOperationException)
         {
-            _logger.LogError(ex, "Unexpected error placing IG order for {Symbol}", cmd.Symbol);
+            _logger.LogError(ex, "Unexpected error placing IG order for tenant {TenantId}, {Symbol}", _tenantId, cmd.Symbol);
             throw new InvalidOperationException(
                 $"Failed to place IG order for {cmd.Symbol}: {ex.Message}",
                 ex);
@@ -121,7 +182,7 @@ public sealed class IGMarketsConnector : ITradeConnector
     {
         var startTime = DateTimeOffset.UtcNow;
         var timeout = TimeSpan.FromSeconds(timeoutSeconds);
-        var pollInterval = TimeSpan.FromMilliseconds(500); // Poll every 500ms
+        var pollInterval = TimeSpan.FromMilliseconds(500);
 
         while (DateTimeOffset.UtcNow - startTime < timeout)
         {
@@ -129,7 +190,6 @@ public sealed class IGMarketsConnector : ITradeConnector
             {
                 var confirmation = await _apiClient.GetDealConfirmationAsync(dealReference, ct);
 
-                // If we got a definitive status, return it
                 if (!string.IsNullOrEmpty(confirmation.DealStatus))
                 {
                     return confirmation;
@@ -143,7 +203,6 @@ public sealed class IGMarketsConnector : ITradeConnector
                     dealReference);
             }
 
-            // Wait before polling again
             await Task.Delay(pollInterval, ct);
         }
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Pipster.Domain.Repositories;
+using Pipster.Infrastructure.Connectors;
 using Pipster.Infrastructure.Idempotency;
 using Pipster.Infrastructure.Messaging;
 using Pipster.Infrastructure.Repositories;
@@ -24,7 +25,9 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddSingleton<ITenantRepository, InMemoryTenantRepository>();
         services.AddSingleton<IChannelConfigurationRepository, InMemoryChannelConfigurationRepository>();
         services.AddSingleton<ITradingConfigurationRepository, InMemoryTradingConfigurationRepository>();
+        services.AddSingleton<IBrokerConnectionRepository, InMemoryBrokerConnectionRepository>();
         services.AddSingleton<IMessageBus, InMemoryBus>();
+        services.AddSingleton<ITradeConnectorFactory, TradeConnectorFactory>();
 
         /// Dependency injection extensions for idempotency services.
         var redisConnectionString = configuration.GetConnectionString("Redis");

@@ -25,6 +25,13 @@ public sealed class ChannelConfiguration
     public string RegexPattern { get; private set; }
 
     /// <summary>
+    /// Broker connection IDs to route signals to
+    /// If empty, uses tenant's default active brokers
+    /// </summary>
+    private readonly List<string> _brokerConnectionIds = new();
+    public IReadOnlyList<string> BrokerConnectionIds => _brokerConnectionIds.AsReadOnly();
+
+    /// <summary>
     /// Whether signal parsing is enabled for this channel
     /// </summary>
     public bool IsEnabled { get; private set; }
@@ -108,6 +115,57 @@ public sealed class ChannelConfiguration
     public void UpdateChannelName(string? newName)
     {
         ChannelName = newName;
+        UpdatedAt = DateTimeOffset.UtcNow;
+    }
+
+    /// <summary>
+    /// Adds a broker connection to this channel
+    /// </summary>
+    public void AddBrokerConnection(string brokerConnectionId)
+    {
+        if (string.IsNullOrWhiteSpace(brokerConnectionId))
+            throw new ArgumentException("Broker connection ID cannot be empty", nameof(brokerConnectionId));
+
+        if (!_brokerConnectionIds.Contains(brokerConnectionId))
+        {
+            _brokerConnectionIds.Add(brokerConnectionId);
+            UpdatedAt = DateTimeOffset.UtcNow;
+        }
+    }
+
+    /// <summary>
+    /// Removes a broker connection from this channel
+    /// </summary>
+    public void RemoveBrokerConnection(string brokerConnectionId)
+    {
+        if (_brokerConnectionIds.Remove(brokerConnectionId))
+        {
+            UpdatedAt = DateTimeOffset.UtcNow;
+        }
+    }
+
+    /// <summary>
+    /// Clears all broker connections (will use tenant defaults)
+    /// </summary>
+    public void ClearBrokerConnections()
+    {
+        if (_brokerConnectionIds.Any())
+        {
+            _brokerConnectionIds.Clear();
+            UpdatedAt = DateTimeOffset.UtcNow;
+        }
+    }
+
+    /// <summary>
+    /// Sets the broker connections (replaces existing)
+    /// </summary>
+    public void SetBrokerConnections(IEnumerable<string> brokerConnectionIds)
+    {
+        _brokerConnectionIds.Clear();
+        foreach (var id in brokerConnectionIds.Where(id => !string.IsNullOrWhiteSpace(id)))
+        {
+            _brokerConnectionIds.Add(id);
+        }
         UpdatedAt = DateTimeOffset.UtcNow;
     }
 
