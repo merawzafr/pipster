@@ -18,11 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Pipster.Domain\Pipster.Domain.csproj" />
     <ProjectReference Include="..\Pipster.Shared\Pipster.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Idempotency\" />
   </ItemGroup>
 
 </Project>
