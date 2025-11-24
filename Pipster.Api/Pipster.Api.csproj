@@ -19,4 +19,8 @@
     <ProjectReference Include="..\Pipster.Shared\Pipster.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Scripts\" />
+  </ItemGroup>
+
 </Project>

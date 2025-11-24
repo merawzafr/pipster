@@ -11,7 +11,7 @@ namespace Pipster.Api.Extensions
             IConfiguration configuration)
         {
             var identityServerUrl = configuration["Authentication:Authority"]
-                ?? "http://localhost:5000";
+                ?? "http://localhost:7019";
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
